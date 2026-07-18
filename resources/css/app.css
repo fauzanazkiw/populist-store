@@ -1,0 +1,276 @@
+@import "tailwindcss";
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans:
+        "Instrument Sans", ui-sans-serif, system-ui, sans-serif,
+        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+        "Noto Color Emoji";
+    --font-display:
+        "Space Grotesk", "Instrument Sans", ui-sans-serif, system-ui,
+        sans-serif;
+}
+
+/* ── Base polish ── */
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+/* Display font utility for headings / brand marks */
+.font-display {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+}
+
+/* Text selection */
+::selection {
+    background-color: #111827;
+    color: #ffffff;
+}
+
+/* Slimmer, quieter scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+::-webkit-scrollbar-thumb {
+    background-color: rgb(209 213 219);
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(156 163 175);
+}
+
+.work-sans {
+    font-family: "Work Sans", sans-serif;
+}
+
+#menu-toggle:checked + #menu {
+    display: block;
+}
+
+.hover\:grow {
+    transition: all 0.3s;
+    transform: scale(1);
+}
+
+.hover\:grow:hover {
+    transform: scale(1.02);
+}
+
+.carousel-open:checked + .carousel-item {
+    position: static;
+    opacity: 100;
+}
+
+.carousel-item {
+    -webkit-transition: opacity 0.6s ease-out;
+    transition: opacity 0.6s ease-out;
+}
+
+#carousel-1:checked ~ .control-1,
+#carousel-2:checked ~ .control-2,
+#carousel-3:checked ~ .control-3 {
+    display: block;
+}
+
+.carousel-indicators {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    bottom: 2%;
+    left: 0;
+    right: 0;
+    text-align: center;
+    z-index: 10;
+}
+
+#carousel-1:checked
+    ~ .control-1
+    ~ .carousel-indicators
+    li:nth-child(1)
+    .carousel-bullet,
+#carousel-2:checked
+    ~ .control-2
+    ~ .carousel-indicators
+    li:nth-child(2)
+    .carousel-bullet,
+#carousel-3:checked
+    ~ .control-3
+    ~ .carousel-indicators
+    li:nth-child(3)
+    .carousel-bullet {
+    color: #000;
+}
+
+/* NAVBAR STYLES */
+#header {
+    transition: all 0.3s ease !important;
+}
+
+/* Navbar transparent state - WHITE TEXT */
+#header.navbar-transparent {
+    background-color: transparent !important;
+    border-bottom: none !important;
+    box-shadow: none !important;
+}
+
+#header.navbar-transparent a {
+    color: white !important;
+}
+
+#header.navbar-transparent button {
+    color: white !important;
+}
+
+#header.navbar-transparent span {
+    color: white !important;
+}
+
+#header.navbar-transparent svg path,
+#header.navbar-transparent svg circle {
+    fill: white !important;
+}
+
+#header.navbar-transparent .nav-link {
+    color: white !important;
+}
+
+#header.navbar-transparent .nav-logo {
+    color: white !important;
+}
+
+/* Logo is a white PNG — keep it white on the transparent navbar */
+#header.navbar-transparent .nav-logo img {
+    filter: none;
+}
+
+#header.navbar-transparent .nav-icon {
+    color: white !important;
+}
+
+#header.navbar-transparent .nav-text {
+    color: white !important;
+}
+
+/* Navbar solid state - DARK TEXT ON WHITE BG */
+#header.navbar-solid {
+    background-color: white !important;
+    border-bottom: 1px solid rgb(243, 244, 246) !important;
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05) !important;
+}
+
+#header.navbar-solid a {
+    color: black !important;
+}
+
+#header.navbar-solid button {
+    color: black !important;
+}
+
+#header.navbar-solid span {
+    color: black !important;
+}
+
+#header.navbar-solid svg path,
+#header.navbar-solid svg circle {
+    fill: black !important;
+}
+
+#header.navbar-solid .nav-link {
+    color: black !important;
+}
+
+#header.navbar-solid .nav-logo {
+    color: black !important;
+}
+
+/* Solid navbar has a white background — darken the white logo so it stays visible */
+#header.navbar-solid .nav-logo img {
+    filter: brightness(0);
+}
+
+#header.navbar-solid .nav-icon {
+    color: black !important;
+}
+
+#header.navbar-solid .nav-text {
+    color: black !important;
+}
+
+#header.navbar-solid a:hover {
+    color: black !important;
+    background-color: rgb(249, 250, 251) !important;
+}
+
+/* TOAST POPUP ANIMATIONS */
+@keyframes toast-slide-in {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes toast-slide-out {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+.toast-popup {
+    animation: toast-slide-in 0.3s ease-out forwards;
+}
+
+.toast-popup.toast-leave {
+    animation: toast-slide-out 0.25s ease-in forwards;
+}
+
+/* ── Fade / rise-in reveal ── */
+@keyframes fade-rise {
+    from {
+        transform: translateY(16px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.animate-fade-rise {
+    animation: fade-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Animated gradient underline for links */
+.link-underline {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    background-size: 0% 1.5px;
+    transition: background-size 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.link-underline:hover {
+    background-size: 100% 1.5px;
+}

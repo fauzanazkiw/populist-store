@@ -1,0 +1,28 @@
+services:
+    postgres:
+        image: postgres:15-alpine
+        container_name: populist
+        environment:
+            POSTGRES_USER: populist
+            POSTGRES_PASSWORD: populist_123
+            POSTGRES_DB: populistdb
+        ports:
+            - "5432:5432"
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+        networks:
+            - finance-network
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U populist"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+        restart: unless-stopped
+
+networks:
+    finance-network:
+        driver: bridge
+
+volumes:
+    postgres_data:
+        driver: local
