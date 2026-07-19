@@ -10,6 +10,7 @@ use App\Services\Api\ProductService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Validation\Rule;
 
 class ProductController extends Controller
 {
@@ -32,7 +33,7 @@ class ProductController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'data'   => $products,
+            'data' => $products,
         ]);
     }
 
@@ -42,7 +43,7 @@ class ProductController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'data'   => $product,
+            'data' => $product,
         ]);
     }
 
@@ -62,60 +63,64 @@ class ProductController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'data'   => $products,
+            'data' => $products,
         ]);
     }
 
     public function store(Request $request): JsonResponse
     {
         $data = $request->validate([
-            'name'        => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'price'       => 'required|numeric|min:0',
-            'stock'       => 'required|integer|min:0',
-            'active'      => 'boolean',
+            'price' => 'required|numeric|min:0',
+            'stock' => 'required|integer|min:0',
+            'sizes' => 'nullable|array',
+            'sizes.*' => ['string', Rule::in(Product::SIZES)],
+            'active' => 'boolean',
             'category_id' => 'nullable|exists:categories,id',
-            'images'      => 'nullable|array|max:10',
-            'images.*'    => 'image|mimes:jpeg,png,webp|max:2048',
+            'images' => 'nullable|array|max:10',
+            'images.*' => 'image|mimes:jpeg,png,webp|max:2048',
         ]);
 
         $imageFiles = $request->file('images', []);
-        $product    = $this->productService->store(
+        $product = $this->productService->store(
             Arr::except($data, ['images']),
             $imageFiles,
         );
 
         return response()->json([
-            'status'  => 'success',
+            'status' => 'success',
             'message' => 'Produk berhasil dibuat.',
-            'data'    => $product,
+            'data' => $product,
         ], 201);
     }
 
     public function update(Request $request, Product $product): JsonResponse
     {
         $data = $request->validate([
-            'name'        => 'sometimes|string|max:255',
+            'name' => 'sometimes|string|max:255',
             'description' => 'nullable|string',
-            'price'       => 'sometimes|numeric|min:0',
-            'stock'       => 'sometimes|integer|min:0',
-            'active'      => 'boolean',
+            'price' => 'sometimes|numeric|min:0',
+            'stock' => 'sometimes|integer|min:0',
+            'sizes' => 'nullable|array',
+            'sizes.*' => ['string', Rule::in(Product::SIZES)],
+            'active' => 'boolean',
             'category_id' => 'nullable|exists:categories,id',
-            'images'      => 'nullable|array|max:10',
-            'images.*'    => 'image|mimes:jpeg,png,webp|max:2048',
+            'images' => 'nullable|array|max:10',
+            'images.*' => 'image|mimes:jpeg,png,webp|max:2048',
         ]);
 
         $imageFiles = $request->file('images', []);
-        $product    = $this->productService->update(
+        $product = $this->productService->update(
             $product,
             Arr::except($data, ['images']),
             $imageFiles,
         );
 
         return response()->json([
-            'status'  => 'success',
+            'status' => 'success',
             'message' => 'Produk berhasil diupdate.',
-            'data'    => $product,
+            'data' => $product,
         ]);
     }
 
@@ -125,13 +130,13 @@ class ProductController extends Controller
             $this->productService->destroy($product);
         } catch (\RuntimeException $e) {
             return response()->json([
-                'status'  => 'error',
+                'status' => 'error',
                 'message' => $e->getMessage(),
             ], 422);
         }
 
         return response()->json([
-            'status'  => 'success',
+            'status' => 'success',
             'message' => 'Produk berhasil dihapus.',
         ]);
     }
@@ -141,16 +146,16 @@ class ProductController extends Controller
         $product = $this->productService->toggleActive($product);
 
         return response()->json([
-            'status'  => 'success',
+            'status' => 'success',
             'message' => $product->active ? 'Produk diaktifkan.' : 'Produk dinonaktifkan.',
-            'data'    => $product,
+            'data' => $product,
         ]);
     }
 
     public function storeImages(Request $request, Product $product): JsonResponse
     {
         $request->validate([
-            'images'   => 'required|array|min:1|max:10',
+            'images' => 'required|array|min:1|max:10',
             'images.*' => 'image|mimes:jpeg,png,webp|max:2048',
         ]);
 
@@ -158,9 +163,9 @@ class ProductController extends Controller
         $product->load('images');
 
         return response()->json([
-            'status'  => 'success',
+            'status' => 'success',
             'message' => 'Gambar berhasil diupload.',
-            'data'    => $product->images,
+            'data' => $product->images,
         ], 201);
     }
 
@@ -173,7 +178,7 @@ class ProductController extends Controller
         $this->productService->setMainImage($image);
 
         return response()->json([
-            'status'  => 'success',
+            'status' => 'success',
             'message' => 'Gambar utama berhasil diubah.',
         ]);
     }
@@ -187,7 +192,7 @@ class ProductController extends Controller
         $this->productService->deleteImage($image);
 
         return response()->json([
-            'status'  => 'success',
+            'status' => 'success',
             'message' => 'Gambar berhasil dihapus.',
         ]);
     }
@@ -200,17 +205,17 @@ class ProductController extends Controller
             $this->productService->deductStock($product, $request->integer('quantity'));
         } catch (InsufficientStockException $e) {
             return response()->json([
-                'status'    => 'error',
-                'message'   => $e->getMessage(),
+                'status' => 'error',
+                'message' => $e->getMessage(),
                 'available' => $e->getAvailable(),
                 'requested' => $e->getRequested(),
             ], 422);
         }
 
         return response()->json([
-            'status'  => 'success',
+            'status' => 'success',
             'message' => 'Stok berhasil dikurangi.',
-            'data'    => ['stock' => $product->fresh()->stock],
+            'data' => ['stock' => $product->fresh()->stock],
         ]);
     }
 
@@ -221,9 +226,9 @@ class ProductController extends Controller
         $this->productService->restoreStock($product, $request->integer('quantity'));
 
         return response()->json([
-            'status'  => 'success',
+            'status' => 'success',
             'message' => 'Stok berhasil dikembalikan.',
-            'data'    => ['stock' => $product->fresh()->stock],
+            'data' => ['stock' => $product->fresh()->stock],
         ]);
     }
 }

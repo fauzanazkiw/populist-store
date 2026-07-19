@@ -13,6 +13,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class CartController extends Controller
@@ -42,16 +43,22 @@ class CartController extends Controller
      */
     public function add(Request $request, Product $product): RedirectResponse
     {
+        $hasSizes = ! empty($product->sizes);
+
         $request->validate([
             'quantity' => 'required|integer|min:1|max:'.$product->stock,
+            'size' => [$hasSizes ? 'required' : 'nullable', Rule::in($product->sizes ?? [])],
         ]);
 
         abort_if(! $product->active, 404);
         abort_if($product->stock < $request->quantity, 422, 'Not enough stock available');
 
+        $size = $hasSizes ? $request->input('size') : null;
+
         $user = $this->authenticatedUser();
         $cartItem = $user->cartItems()
             ->where('product_id', $product->id)
+            ->where('size', $size)
             ->first();
 
         if ($cartItem) {
@@ -64,6 +71,7 @@ class CartController extends Controller
             $user->cartItems()->create([
                 'product_id' => $product->id,
                 'quantity' => $request->quantity,
+                'size' => $size,
             ]);
         }
 
@@ -167,6 +175,7 @@ class CartController extends Controller
                 $order->items()->create([
                     'product_id' => $item->product_id,
                     'quantity' => $item->quantity,
+                    'size' => $item->size,
                     'price' => $price,
                     'total' => $lineTotal,
                 ]);

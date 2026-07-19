@@ -9,6 +9,7 @@ use App\Services\Api\ProductService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class ProductController extends Controller
@@ -26,7 +27,7 @@ class ProductController extends Controller
     {
         $filters = $this->resolveFilters($request, forceActive: true);
 
-        $products   = $this->productService->paginate($filters);
+        $products = $this->productService->paginate($filters);
         $categories = Category::orderBy('name')->get();
 
         return view('products.index', compact('products', 'categories', 'filters'));
@@ -37,7 +38,7 @@ class ProductController extends Controller
      */
     public function show(Product $product): View
     {
-        abort_if(!$product->active, 404);
+        abort_if(! $product->active, 404);
 
         $product->load(['category', 'images']);
 
@@ -53,7 +54,7 @@ class ProductController extends Controller
      */
     public function adminIndex(Request $request): View
     {
-        $filters  = $this->resolveFilters($request, forceActive: false);
+        $filters = $this->resolveFilters($request, forceActive: false);
         $products = $this->productService->paginate($filters);
 
         return view('admin.products.index', compact('products'));
@@ -75,14 +76,16 @@ class ProductController extends Controller
     public function adminStore(Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'name'        => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'price'       => 'required|numeric|min:0',
-            'stock'       => 'required|integer|min:0',
-            'active'      => 'boolean',
+            'price' => 'required|numeric|min:0',
+            'stock' => 'required|integer|min:0',
+            'sizes' => 'nullable|array',
+            'sizes.*' => ['string', Rule::in(Product::SIZES)],
+            'active' => 'boolean',
             'category_id' => 'nullable|exists:categories,id',
-            'images'      => 'nullable|array|max:10',
-            'images.*'    => 'image|mimes:jpeg,png,webp|max:2048',
+            'images' => 'nullable|array|max:10',
+            'images.*' => 'image|mimes:jpeg,png,webp|max:2048',
         ]);
 
         $this->productService->store(
@@ -111,14 +114,16 @@ class ProductController extends Controller
     public function adminUpdate(Request $request, Product $product): RedirectResponse
     {
         $data = $request->validate([
-            'name'        => 'sometimes|string|max:255',
+            'name' => 'sometimes|string|max:255',
             'description' => 'nullable|string',
-            'price'       => 'sometimes|numeric|min:0',
-            'stock'       => 'sometimes|integer|min:0',
-            'active'      => 'boolean',
+            'price' => 'sometimes|numeric|min:0',
+            'stock' => 'sometimes|integer|min:0',
+            'sizes' => 'nullable|array',
+            'sizes.*' => ['string', Rule::in(Product::SIZES)],
+            'active' => 'boolean',
             'category_id' => 'nullable|exists:categories,id',
-            'images'      => 'nullable|array|max:10',
-            'images.*'    => 'image|mimes:jpeg,png,webp|max:2048',
+            'images' => 'nullable|array|max:10',
+            'images.*' => 'image|mimes:jpeg,png,webp|max:2048',
         ]);
 
         $this->productService->update(
@@ -187,17 +192,17 @@ class ProductController extends Controller
 
         // Map combined sort param → sort_by + sort_dir
         $sortMap = [
-            'newest'     => ['created_at', 'desc'],
-            'name_asc'   => ['name',       'asc'],
-            'name_desc'  => ['name',       'desc'],
-            'price_asc'  => ['price',      'asc'],
+            'newest' => ['created_at', 'desc'],
+            'name_asc' => ['name',       'asc'],
+            'name_desc' => ['name',       'desc'],
+            'price_asc' => ['price',      'asc'],
             'price_desc' => ['price',      'desc'],
         ];
         [$sortBy, $sortDir] = $sortMap[$request->input('sort', 'newest')] ?? ['created_at', 'desc'];
-        $filters['sort_by']  = $sortBy;
+        $filters['sort_by'] = $sortBy;
         $filters['sort_dir'] = $sortDir;
         // Keep raw sort for view pre-selection
-        $filters['sort']     = $request->input('sort', 'newest');
+        $filters['sort'] = $request->input('sort', 'newest');
 
         if ($forceActive) {
             $filters['active'] = true;

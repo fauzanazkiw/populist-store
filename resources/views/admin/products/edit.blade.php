@@ -92,6 +92,34 @@
                 </div>
             </div>
 
+            {{-- Sizes --}}
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Available Sizes</label>
+                {{-- Hidden field ensures sizes are cleared when all checkboxes are unchecked --}}
+                <input type="hidden" name="sizes" value="">
+                <div class="flex flex-wrap gap-3">
+                    @foreach(\App\Models\Product::SIZES as $size)
+                        <label class="inline-flex items-center gap-2 border border-gray-300 rounded-xl px-4 py-2.5 cursor-pointer hover:border-gray-400 transition">
+                            <input
+                                type="checkbox"
+                                name="sizes[]"
+                                value="{{ $size }}"
+                                @checked(in_array($size, old('sizes', $product->sizes ?? [])))
+                                class="w-4 h-4 rounded border-gray-300 accent-black cursor-pointer"
+                            >
+                            <span class="text-sm">{{ $size }}</span>
+                        </label>
+                    @endforeach
+                </div>
+                <p class="text-xs text-gray-400 mt-1">Leave empty if the product has no size options</p>
+                @error('sizes')
+                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                @enderror
+                @error('sizes.*')
+                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+
             {{-- Category --}}
             <div>
                 <label for="category_id" class="block text-sm font-medium text-gray-700 mb-1">Category</label>

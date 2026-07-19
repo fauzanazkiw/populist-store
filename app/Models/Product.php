@@ -4,17 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\OrderItem;
 
 class Product extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'slug', 'description', 'price', 'stock', 'active', 'category_id'];
+    public const SIZES = ['S', 'M', 'L', 'XL', 'XXL'];
+
+    protected $fillable = ['name', 'slug', 'description', 'price', 'stock', 'sizes', 'active', 'category_id'];
 
     protected $casts = [
         'price' => 'decimal:2',
         'active' => 'boolean',
+        'sizes' => 'array',
     ];
 
     public function category()

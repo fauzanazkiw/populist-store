@@ -67,6 +67,9 @@
                 <div class="flex justify-between py-3 text-sm">
                     <span class="text-gray-700">
                         {{ $item->product?->name ?? 'Produk dihapus' }}
+                        @if($item->size)
+                            <span class="text-gray-400">({{ $item->size }})</span>
+                        @endif
                         <span class="text-gray-400">x{{ $item->quantity }}</span>
                     </span>
                     <span class="font-medium text-gray-900">Rp {{ number_format($item->total, 0, ',', '.') }}</span>

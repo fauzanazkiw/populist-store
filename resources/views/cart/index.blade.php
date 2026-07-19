@@ -56,6 +56,11 @@
                                             <p class="text-sm text-gray-500 mt-0.5">
                                                 SKU: {{ $item->product->id }}
                                             </p>
+                                            @if($item->size)
+                                                <p class="text-sm text-gray-500 mt-0.5">
+                                                    Size: {{ $item->size }}
+                                                </p>
+                                            @endif
                                         </div>
                                         <form action="{{ route('cart.remove', $item) }}" method="POST" onsubmit="return confirm('Remove this item?')">
                                             @csrf

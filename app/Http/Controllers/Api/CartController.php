@@ -7,6 +7,7 @@ use App\Models\CartItem;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class CartController extends Controller
 {
@@ -20,7 +21,7 @@ class CartController extends Controller
             ->with('product.mainImage')
             ->get();
 
-        $subtotal = $cartItems->sum(fn($item) => $item->product->price * $item->quantity);
+        $subtotal = $cartItems->sum(fn ($item) => $item->product->price * $item->quantity);
         $shipping = 50000;
         $tax = $subtotal * 0.1;
         $total = $subtotal + $shipping + $tax;
@@ -35,8 +36,8 @@ class CartController extends Controller
                     'tax' => $tax,
                     'total' => $total,
                     'item_count' => $cartItems->count(),
-                ]
-            ]
+                ],
+            ],
         ]);
     }
 
@@ -45,11 +46,14 @@ class CartController extends Controller
      */
     public function add(Request $request, Product $product): JsonResponse
     {
+        $hasSizes = ! empty($product->sizes);
+
         $request->validate([
-            'quantity' => 'required|integer|min:1|max:' . $product->stock,
+            'quantity' => 'required|integer|min:1|max:'.$product->stock,
+            'size' => [$hasSizes ? 'required' : 'nullable', Rule::in($product->sizes ?? [])],
         ]);
 
-        if (!$product->active) {
+        if (! $product->active) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Product is not available',
@@ -63,9 +67,12 @@ class CartController extends Controller
             ], 422);
         }
 
+        $size = $hasSizes ? $request->input('size') : null;
+
         $cartItem = $request->user()
             ->cartItems()
             ->where('product_id', $product->id)
+            ->where('size', $size)
             ->first();
 
         if ($cartItem) {
@@ -81,13 +88,14 @@ class CartController extends Controller
             $cartItem = $request->user()->cartItems()->create([
                 'product_id' => $product->id,
                 'quantity' => $request->quantity,
+                'size' => $size,
             ]);
         }
 
         return response()->json([
             'status' => 'success',
             'message' => 'Item added to cart',
-            'data' => $cartItem->load('product.mainImage')
+            'data' => $cartItem->load('product.mainImage'),
         ], 201);
     }
 
@@ -104,7 +112,7 @@ class CartController extends Controller
         }
 
         $request->validate([
-            'quantity' => 'required|integer|min:1|max:' . $cartItem->product->stock,
+            'quantity' => 'required|integer|min:1|max:'.$cartItem->product->stock,
         ]);
 
         $cartItem->update(['quantity' => $request->quantity]);
@@ -112,7 +120,7 @@ class CartController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Cart updated',
-            'data' => $cartItem->load('product.mainImage')
+            'data' => $cartItem->load('product.mainImage'),
         ]);
     }
 

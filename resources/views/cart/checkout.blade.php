@@ -131,6 +131,9 @@
                         <div class="flex justify-between text-sm">
                             <span class="text-gray-600">
                                 {{ $item->product->name }}
+                                @if($item->size)
+                                    <span class="text-gray-400">({{ $item->size }})</span>
+                                @endif
                                 <span class="text-gray-500">x{{ $item->quantity }}</span>
                             </span>
                             <span class="font-medium text-gray-900">

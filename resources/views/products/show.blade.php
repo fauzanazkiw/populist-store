@@ -103,6 +103,36 @@
                 <form method="POST" action="{{ route('cart.add', $product) }}" class="space-y-4 pt-1">
                     @csrf
 
+                    {{-- Size --}}
+                    @if(!empty($product->sizes))
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                Size <span class="text-red-500">*</span>
+                            </label>
+                            <div class="flex flex-wrap gap-2">
+                                @foreach($product->sizes as $size)
+                                    <label class="cursor-pointer">
+                                        <input
+                                            type="radio"
+                                            name="size"
+                                            value="{{ $size }}"
+                                            @checked(old('size') === $size)
+                                            {{ $product->stock <= 0 ? 'disabled' : '' }}
+                                            required
+                                            class="peer sr-only"
+                                        >
+                                        <span class="inline-block border border-gray-300 rounded-xl px-4 py-2.5 text-sm font-medium
+                                                     peer-checked:bg-black peer-checked:text-white peer-checked:border-black
+                                                     hover:border-gray-400 transition">{{ $size }}</span>
+                                    </label>
+                                @endforeach
+                            </div>
+                            @error('size')
+                                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    @endif
+
                     {{-- Quantity --}}
                     <div>
                         <label for="quantity" class="block text-sm font-medium text-gray-700 mb-1">Quantity</label>
