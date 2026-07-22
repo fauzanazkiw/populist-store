@@ -17,12 +17,16 @@ class Order extends Model
         'payment_link',
         'payment_transaction_id',
         'paid_at',
+        'shipping_courier',
+        'tracking_number',
+        'shipped_at',
     ];
 
     protected $casts = [
         'shipping_address' => 'array',
         'total' => 'decimal:2',
         'paid_at' => 'datetime',
+        'shipped_at' => 'datetime',
     ];
 
     public function user()
@@ -55,5 +59,15 @@ class Order extends Model
         }
 
         return false;
+    }
+
+    /**
+     * Apakah pesanan sudah dibayar? Menjadi syarat admin dapat menambahkan
+     * nomor resi. Pembayaran dianggap lunas bila status 'completed' atau
+     * kolom paid_at sudah terisi (dari webhook Midtrans).
+     */
+    public function isPaid(): bool
+    {
+        return $this->status === 'completed' || ! is_null($this->paid_at);
     }
 }

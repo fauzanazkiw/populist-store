@@ -83,4 +83,5 @@ Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')->group(
     Route::get('/payments', [PaymentController::class, 'index'])->name('payments.index');
     Route::get('/payments/{order}', [PaymentController::class, 'show'])->name('payments.show');
     Route::patch('/payments/{order}/status', [PaymentController::class, 'updateStatus'])->name('payments.update-status');
+    Route::patch('/payments/{order}/tracking', [PaymentController::class, 'updateTracking'])->name('payments.update-tracking');
 });

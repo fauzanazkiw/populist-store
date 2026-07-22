@@ -166,6 +166,48 @@
                 </button>
             </form>
         </div>
+
+        {{-- Resi pengiriman (input manual oleh admin, setelah dibayar) --}}
+        <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
+            <h2 class="font-semibold text-gray-900 mb-1">Resi Pengiriman</h2>
+            <p class="text-xs text-gray-500 mb-4">Nomor resi ditambahkan manual oleh admin.</p>
+
+            @if($order->isPaid())
+                <form method="POST" action="{{ route('admin.payments.update-tracking', $order) }}" class="space-y-3">
+                    @csrf
+                    @method('PATCH')
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Kurir / Ekspedisi</label>
+                        <input type="text" name="shipping_courier" value="{{ old('shipping_courier', $order->shipping_courier) }}"
+                               placeholder="Contoh: JNE, J&T, SiCepat"
+                               class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-black focus:outline-none text-sm">
+                        @error('shipping_courier')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Nomor Resi</label>
+                        <input type="text" name="tracking_number" value="{{ old('tracking_number', $order->tracking_number) }}"
+                               placeholder="Masukkan nomor resi"
+                               class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-black focus:outline-none text-sm">
+                        @error('tracking_number')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    @if($order->tracking_number)
+                        <p class="text-xs text-gray-500">
+                            Dikirim {{ $order->shipped_at?->format('d M Y, H:i') ?? '—' }}
+                        </p>
+                    @endif
+                    <button type="submit"
+                            class="w-full bg-black text-white py-2.5 rounded-lg hover:bg-gray-800 transition font-medium text-sm">
+                        {{ $order->tracking_number ? 'Perbarui Resi' : 'Simpan Resi' }}
+                    </button>
+                </form>
+            @else
+                <p class="text-sm text-gray-500 italic">Resi dapat ditambahkan setelah pelanggan menyelesaikan pembayaran.</p>
+            @endif
+        </div>
     </div>
 </div>
 @endsection

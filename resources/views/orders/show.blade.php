@@ -83,6 +83,31 @@
         </div>
     </div>
 
+    {{-- Resi pengiriman --}}
+    @if($order->tracking_number)
+        <div class="bg-white rounded-xl shadow-sm p-6 mb-6 border border-blue-100">
+            <h2 class="text-lg font-semibold text-gray-900 mb-2">Informasi Pengiriman</h2>
+            <div class="text-sm text-gray-600 space-y-1">
+                @if($order->shipping_courier)
+                    <div class="flex gap-2">
+                        <span class="text-gray-400 min-w-24">Kurir</span>
+                        <span class="font-medium text-gray-900">{{ $order->shipping_courier }}</span>
+                    </div>
+                @endif
+                <div class="flex gap-2">
+                    <span class="text-gray-400 min-w-24">Nomor Resi</span>
+                    <span class="font-mono font-medium text-gray-900">{{ $order->tracking_number }}</span>
+                </div>
+                @if($order->shipped_at)
+                    <div class="flex gap-2">
+                        <span class="text-gray-400 min-w-24">Dikirim</span>
+                        <span class="text-gray-900">{{ $order->shipped_at->format('d M Y, H:i') }}</span>
+                    </div>
+                @endif
+            </div>
+        </div>
+    @endif
+
     {{-- Shipping address --}}
     @if($order->shipping_address)
         <div class="bg-white rounded-xl shadow-sm p-6 mb-6">

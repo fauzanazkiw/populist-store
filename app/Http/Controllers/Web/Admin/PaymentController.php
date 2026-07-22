@@ -59,4 +59,32 @@ class PaymentController extends Controller
         return redirect()->back()
             ->with('success', 'Status pembayaran berhasil diupdate.');
     }
+
+    /**
+     * Tambah/ubah nomor resi pengiriman secara manual.
+     *
+     * Resi diinput sendiri oleh admin (bukan dari API kurir) dan hanya boleh
+     * ditambahkan setelah pelanggan menyelesaikan pembayaran.
+     */
+    public function updateTracking(Request $request, Order $order)
+    {
+        if (! $order->isPaid()) {
+            return redirect()->back()
+                ->with('error', 'Resi hanya dapat ditambahkan setelah pesanan dibayar.');
+        }
+
+        $validated = $request->validate([
+            'shipping_courier' => 'required|string|max:255',
+            'tracking_number' => 'required|string|max:255',
+        ]);
+
+        $order->update([
+            'shipping_courier' => $validated['shipping_courier'],
+            'tracking_number' => $validated['tracking_number'],
+            'shipped_at' => $order->shipped_at ?? now(),
+        ]);
+
+        return redirect()->back()
+            ->with('success', 'Nomor resi berhasil disimpan.');
+    }
 }
