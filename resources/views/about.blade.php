@@ -8,7 +8,7 @@
          style="background-image:url('https://images.unsplash.com/photo-1445205170230-053b83016050?ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80');"></div>
     <div class="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-950/70 to-gray-950/40"></div>
     <div class="relative max-w-5xl mx-auto px-6 py-24 md:py-32 text-center animate-fade-rise">
-        <span class="uppercase tracking-[0.4em] text-xs text-white/60">Est. 2019 — Kebumen</span>
+        <span class="uppercase tracking-[0.4em] text-xs text-white/60">Est. 2020 — Kebumen</span>
         <h1 class="font-display text-5xl md:text-7xl font-bold tracking-tight mt-5 mb-6 leading-[0.95]">
             We make the<br>essentials extraordinary.
         </h1>
@@ -16,37 +16,6 @@
             Populist is a curated clothing label built on a simple belief — that everyday clothing
             deserves the same care, quality, and design as anything on the runway.
         </p>
-    </div>
-</section>
-
-{{-- ── Story ── --}}
-<section class="bg-white">
-    <div class="max-w-7xl mx-auto px-6 py-20 grid md:grid-cols-2 gap-14 items-center">
-        <div class="rounded-3xl overflow-hidden aspect-[4/5] shadow-sm order-2 md:order-1">
-            <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80"
-                 alt="Populist storefront" class="w-full h-full object-cover">
-        </div>
-        <div class="order-1 md:order-2">
-            <span class="uppercase tracking-[0.3em] text-xs text-gray-400">Our story</span>
-            <h2 class="font-display text-3xl md:text-4xl font-bold text-gray-900 tracking-tight mt-3 mb-6">
-                Started with a wardrobe of frustrations.
-            </h2>
-            <div class="space-y-4 text-gray-600 leading-relaxed">
-                <p>
-                    Populist began in 2024 with a small team tired of choosing between clothes that looked good
-                    and clothes that lasted. So we set out to make both — pieces designed with intention and
-                    built to be worn for years, not seasons.
-                </p>
-                <p>
-                    Drawing on Scandinavian minimalism, every product starts with the question:
-                    <em>“Would we wear this every day?”</em> If the answer isn't an obvious yes, it doesn't make the cut.
-                </p>
-                <p>
-                    Today we work directly with responsible mills and small workshops, keeping our range tight,
-                    our quality high, and our prices honest.
-                </p>
-            </div>
-        </div>
     </div>
 </section>
 
@@ -72,30 +41,6 @@
                         </svg>
                     </div>
                     <h3 class="font-display text-xl font-semibold text-gray-900 mb-2">{{ $title }}</h3>
-                    <p class="text-sm text-gray-600 leading-relaxed">{{ $desc }}</p>
-                </div>
-            @endforeach
-        </div>
-    </div>
-</section>
-
-{{-- ── Shipping ── --}}
-<section id="shipping" class="bg-white scroll-mt-24">
-    <div class="max-w-7xl mx-auto px-6 py-20">
-        <div class="max-w-2xl mb-12">
-            <span class="uppercase tracking-[0.3em] text-xs text-gray-400">Delivery</span>
-            <h2 class="font-display text-3xl md:text-4xl font-bold text-gray-900 tracking-tight mt-3">
-                Shipping &amp; returns.
-            </h2>
-        </div>
-        <div class="grid md:grid-cols-3 gap-6">
-            @foreach ([
-                ['Free standard shipping', 'On all orders over Rp 500.000. Delivered within 2–5 business days across Indonesia.'],
-                ['Express available', 'Need it sooner? Choose express at checkout for next-day delivery in major cities.'],
-                ['30-day returns', 'Changed your mind? Return unworn items within 30 days for a full refund — no questions asked.'],
-            ] as [$title, $desc])
-                <div class="rounded-2xl bg-gray-50 border border-gray-100 p-8">
-                    <h3 class="font-semibold text-gray-900 mb-2">{{ $title }}</h3>
                     <p class="text-sm text-gray-600 leading-relaxed">{{ $desc }}</p>
                 </div>
             @endforeach

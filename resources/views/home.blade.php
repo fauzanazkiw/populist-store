@@ -55,7 +55,7 @@
                         <h1 class="font-display text-5xl md:text-7xl font-bold text-white leading-[0.95] mb-6">
                             Populist<br>Crew
                         </h1>
-                        <p class="text-white/80 text-lg mb-8 max-w-md">Statement outerwear built for the cold months. Limited run, dropping 26.08.25.</p>
+                        <p class="text-white/80 text-lg mb-8 max-w-md">Est 2020.</p>
                         <a class="inline-flex items-center gap-2 bg-white text-gray-900 px-8 py-3.5 rounded-full font-medium hover:bg-gray-100 transition"
                            href="{{ route('products.index') }}">
                             Shop the drop
@@ -72,7 +72,7 @@
 <section class="bg-white border-b border-gray-100">
     <div class="max-w-7xl mx-auto px-6 py-8 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
         @foreach ([
-            ['M5 13l4 4L19 7', 'Free shipping', 'On orders over Rp 500K'],
+            ['M5 13l4 4L19 7', 'Free shipping', ''],
             ['M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z', 'Easy 30-day returns', 'No questions asked'],
             ['M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z', 'Secure checkout', 'Encrypted payments'],
             ['M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4', 'Quality guaranteed', 'Crafted to last'],

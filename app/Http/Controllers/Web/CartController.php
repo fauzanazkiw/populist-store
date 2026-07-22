@@ -31,11 +31,9 @@ class CartController extends Controller
         $cartItems = $this->authenticatedUser()->cartItems()->with('product.mainImage')->get();
 
         $subtotal = $this->cartSubtotal($cartItems);
-        $shipping = 50000; // Fixed shipping cost
-        $tax = $subtotal * 0.1; // 10% tax
-        $total = $subtotal + $shipping + $tax;
+        $total = $subtotal;
 
-        return view('cart.index', compact('cartItems', 'subtotal', 'shipping', 'tax', 'total'));
+        return view('cart.index', compact('cartItems', 'subtotal', 'total'));
     }
 
     /**
@@ -126,11 +124,9 @@ class CartController extends Controller
         abort_if($cartItems->isEmpty(), 422, 'Cart is empty');
 
         $subtotal = $this->cartSubtotal($cartItems);
-        $shipping = 50000;
-        $tax = $subtotal * 0.1;
-        $total = $subtotal + $shipping + $tax;
+        $total = $subtotal;
 
-        return view('cart.checkout', compact('cartItems', 'subtotal', 'shipping', 'tax', 'total'));
+        return view('cart.checkout', compact('cartItems', 'subtotal', 'total'));
     }
 
     /**
@@ -156,9 +152,7 @@ class CartController extends Controller
 
         // Calculate totals
         $subtotal = $this->cartSubtotal($cartItems);
-        $shipping = 50000;
-        $tax = $subtotal * 0.1;
-        $total = $subtotal + $shipping + $tax;
+        $total = $subtotal;
 
         // Persist order, items and stock changes atomically
         $order = DB::transaction(function () use ($cartItems, $user, $total, $validated) {

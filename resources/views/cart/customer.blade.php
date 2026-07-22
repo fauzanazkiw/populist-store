@@ -107,14 +107,6 @@
                             <span class="text-gray-600">Subtotal</span>
                             <span class="font-medium text-gray-900">Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
                         </div>
-                        <div class="flex justify-between text-sm">
-                            <span class="text-gray-600">Shipping</span>
-                            <span class="font-medium text-gray-900">Rp {{ number_format($shipping, 0, ',', '.') }}</span>
-                        </div>
-                        <div class="flex justify-between text-sm">
-                            <span class="text-gray-600">Tax (10%)</span>
-                            <span class="font-medium text-gray-900">Rp {{ number_format($tax, 0, ',', '.') }}</span>
-                        </div>
                     </div>
 
                     {{-- Total --}}

@@ -112,14 +112,6 @@
                             <span class="text-gray-600">Subtotal</span>
                             <span id="summary-subtotal" class="font-medium text-gray-900">Rp {{ number_format($subtotal, 0, ',', '.') }}</span>
                         </div>
-                        <div class="flex justify-between text-sm">
-                            <span class="text-gray-600">Shipping</span>
-                            <span class="font-medium text-gray-900">Rp {{ number_format($shipping, 0, ',', '.') }}</span>
-                        </div>
-                        <div class="flex justify-between text-sm">
-                            <span class="text-gray-600">Tax (10%)</span>
-                            <span id="summary-tax" class="font-medium text-gray-900">Rp {{ number_format($tax, 0, ',', '.') }}</span>
-                        </div>
                     </div>
 
                     {{-- Total --}}
@@ -150,10 +142,6 @@
 </div>
 
 <script>
-    // Must match the values used in CartController (shipping + 10% tax)
-    const SHIPPING = {{ (int) $shipping }};
-    const TAX_RATE = 0.1;
-
     const rupiah = (n) => 'Rp ' + Math.round(n).toLocaleString('id-ID');
 
     // Recalculate line totals + order summary from the current quantities
@@ -170,11 +158,9 @@
             if (lineEl) lineEl.textContent = rupiah(line);
         });
 
-        const tax = subtotal * TAX_RATE;
-        const total = subtotal + SHIPPING + tax;
+        const total = subtotal;
 
         document.getElementById('summary-subtotal').textContent = rupiah(subtotal);
-        document.getElementById('summary-tax').textContent = rupiah(tax);
         document.getElementById('summary-total').textContent = rupiah(total);
     }
 

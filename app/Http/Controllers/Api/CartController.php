@@ -21,10 +21,8 @@ class CartController extends Controller
             ->with('product.mainImage')
             ->get();
 
-        $subtotal = $cartItems->sum(fn ($item) => $item->product->price * $item->quantity);
-        $shipping = 50000;
-        $tax = $subtotal * 0.1;
-        $total = $subtotal + $shipping + $tax;
+        $subtotal = $cartItems->sum(fn($item) => $item->product->price * $item->quantity);
+        $total = $subtotal;
 
         return response()->json([
             'status' => 'success',
@@ -32,8 +30,6 @@ class CartController extends Controller
                 'items' => $cartItems,
                 'summary' => [
                     'subtotal' => $subtotal,
-                    'shipping' => $shipping,
-                    'tax' => $tax,
                     'total' => $total,
                     'item_count' => $cartItems->count(),
                 ],
@@ -49,7 +45,7 @@ class CartController extends Controller
         $hasSizes = ! empty($product->sizes);
 
         $request->validate([
-            'quantity' => 'required|integer|min:1|max:'.$product->stock,
+            'quantity' => 'required|integer|min:1|max:' . $product->stock,
             'size' => [$hasSizes ? 'required' : 'nullable', Rule::in($product->sizes ?? [])],
         ]);
 
@@ -112,7 +108,7 @@ class CartController extends Controller
         }
 
         $request->validate([
-            'quantity' => 'required|integer|min:1|max:'.$cartItem->product->stock,
+            'quantity' => 'required|integer|min:1|max:' . $cartItem->product->stock,
         ]);
 
         $cartItem->update(['quantity' => $request->quantity]);
